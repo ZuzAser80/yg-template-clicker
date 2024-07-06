@@ -26,7 +26,12 @@ public class ClickerMain : MonoBehaviour
     }
 
     public void HandleClick() {
-        CurrentGain += CurrentEntry.GainBonus;
+        handler.MainSprite.GetComponent<Animator>().SetTrigger("click");
+        if(CurrentEntry == null) { 
+            CurrentGain += 1;
+        } else {
+            CurrentGain += CurrentEntry.GainBonus;
+        }
         //handler.DisplayPopup(CurrentEntry.GainBonus);
         UpdateUI(); 
     }

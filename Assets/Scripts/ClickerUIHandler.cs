@@ -32,7 +32,12 @@ public class ClickerUIHandler : MonoBehaviour
         }
     }
 
+    public void FlipShop() {
+        ShopPanel.SetActive(!ShopPanel.activeSelf);
+    }
+
     public void UpdateSprite(ClickerEntry entry) {
+        if(entry == null) { return;}
         MainSprite.sprite = entry.sprite;
     }
     

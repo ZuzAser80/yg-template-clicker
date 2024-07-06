@@ -14,7 +14,20 @@ public class ClickerYGHandler : MonoBehaviour
     //private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
 
     // Отписываемся от события GetDataEvent в OnDisable
-    private void OnDisable() => YandexGame.GetDataEvent -= GetLoad;
+    private void OnDisable() { 
+        YandexGame.GetDataEvent -= GetLoad;
+        YandexGame.RewardVideoEvent -= Rewarded;
+    }
+    private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
+
+    // Подписанный метод получения награды
+    void Rewarded(int id)
+    {
+        if (id == 0) { 
+            Debug.Log("AdShown");
+            main.CurrentGain += 1000;
+        }
+    }
 
     private void Start()
     {
@@ -51,5 +64,7 @@ public class ClickerYGHandler : MonoBehaviour
 
     public void ShowAd() {
 
+
+        YandexGame.RewVideoShow(0);
     }
 }

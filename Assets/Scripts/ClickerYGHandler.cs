@@ -9,7 +9,7 @@ public class ClickerYGHandler : MonoBehaviour
 {
 
     private ClickerMain main;
-    private ClickerUIHandler handler;
+
     // Подписываемся на событие GetDataEvent в OnEnable
     //private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
 
@@ -18,7 +18,10 @@ public class ClickerYGHandler : MonoBehaviour
         YandexGame.GetDataEvent -= GetLoad;
         YandexGame.RewardVideoEvent -= Rewarded;
     }
-    private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
+    private void OnEnable() {
+        YandexGame.GetDataEvent += GetLoad;
+        YandexGame.RewardVideoEvent += Rewarded;
+    }
 
     // Подписанный метод получения награды
     void Rewarded(int id)
@@ -29,9 +32,12 @@ public class ClickerYGHandler : MonoBehaviour
         }
     }
 
+    private void Awake() {
+        main = GetComponent<ClickerMain>();      
+    }
+
     private void Start()
     {
-        main = GetComponent<ClickerMain>();
         // Проверяем запустился ли плагин
         if (YandexGame.SDKEnabled == true) {
             GetLoad();
@@ -44,6 +50,7 @@ public class ClickerYGHandler : MonoBehaviour
         // Получаем данные из плагина и делаем с ними что хотим
             // Например, мы хотил записать в компонент UI.Text сколько у игрока монет:
         main.CurrentClickerIndex = YandexGame.savesData.CurrentIndex;
+        main.CurrentEntry = main.ClickerEntries[YandexGame.savesData.CurrentIndex];
         main.CurrentGain = YandexGame.savesData.CurrentGain;
         main.EntriesIndexes = YandexGame.savesData.BoughtIndexes;
         //Debug.Log("::: " + YandexGame.savesData.BoughtIndexes[0]);
@@ -58,6 +65,7 @@ public class ClickerYGHandler : MonoBehaviour
         YandexGame.savesData.CurrentIndex = CurrentClickerIndex;
         YandexGame.savesData.CurrentGain = CurrentGain;
         YandexGame.savesData.BoughtIndexes = toExclude.ToArray();
+        YandexGame.NewLeaderboardScores("LeaderBoard", CurrentGain);
             // Теперь остаётся сохранить данные
         YandexGame.SaveProgress();
     }
